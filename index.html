@@ -1,535 +1,840 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="أداة حساب النسب المئوية بالعربية - تحسب النسب، النسب المئوية من عدد، والزيادة أو النقصان بين عددين فورًا." />
-  <title>حاسبة النسب المئوية | أداة عربية ذكية</title>
-  <style>
-    /* Reset عام مع دعم RTL */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="أداة احترافية لحساب النسب المئوية - حساب النسبة المئوية، الزيادة والنقصان">
+    <meta name="keywords" content="حساب النسبة المئوية, نسبة مئوية, زيادة, نقصان, رياضيات">
+    <title>آلة حاسبة النسب المئوية الاحترافية</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS Variables for consistent theming */
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --transition: all 0.3s ease;
+        }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f7f9fc;
-      color: #333;
-      line-height: 1.6;
-      padding: 20px;
-      max-width: 100%;
-      overflow-x: hidden;
-    }
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+        /* Header styles */
+        header {
+            background-color: var(--card-bg);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    h1 {
-      font-size: 2rem;
-      color: #2c3e50;
-      margin-bottom: 10px;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
 
-    .subtitle {
-      font-size: 1.1rem;
-      color: #7f8c8d;
-    }
+        .header-content {
+            text-align: center;
+        }
 
-    .calculator-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
 
-    @media (min-width: 768px) {
-      .calculator-grid {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-    }
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
 
-    .card {
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 10px;
-      padding: 20px;
-      flex: 1 1 300px;
-      min-width: 280px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
+        /* Main content */
+        main {
+            flex: 1;
+            padding: 2rem 0;
+        }
 
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-    }
+        /* Calculator cards */
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
 
-    .card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: #2c3e50;
-      text-align: right;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 8px;
-    }
+        .calc-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
 
-    .input-group {
-      margin-bottom: 15px;
-      text-align: right;
-    }
+        .calc-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
 
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #2c3e50;
-    }
+        .calc-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    input[type="number"] {
-      width: 100%;
-      padding: 12px 15px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #fff;
-      transition: border-color 0.3s ease;
-    }
+        .calc-title i {
+            color: var(--primary-color);
+        }
 
-    input[type="number"]:focus {
-      outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-    }
+        /* Form elements */
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
 
-    .result {
-      margin-top: 15px;
-      padding: 15px;
-      background: #e8f4fc;
-      border: 1px solid #b3d9ff;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      color: #2980b9;
-      text-align: right;
-      word-wrap: break-word;
-    }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
 
-    .copy-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 6px 12px;
-      font-size: 0.9rem;
-      background: #3498db;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+        input[type="number"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+            transition: var(--transition);
+            text-align: right;
+        }
 
-    .copy-btn:hover {
-      background: #2980b9;
-    }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
 
-    .tooltip {
-      font-size: 0.85rem;
-      color: #7f8c8d;
-      margin-top: 5px;
-      font-style: italic;
-    }
+        input[type="number"]:invalid {
+            border-color: var(--error-color);
+        }
 
-    footer {
-      margin-top: 50px;
-      padding: 25px;
-      background: #2c3e50;
-      color: #ecf0f1;
-      border-radius: 10px;
-      text-align: right;
-    }
+        /* Result display */
+        .result-container {
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 2px solid var(--border-color);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-    footer h3 {
-      font-size: 1.4rem;
-      margin-bottom: 15px;
-      color: #3498db;
-    }
+        .result-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            flex: 1;
+        }
 
-    footer ul {
-      list-style-type: none;
-    }
+        .copy-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Tajawal', sans-serif;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-    footer ul li {
-      margin-bottom: 10px;
-    }
+        .copy-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
 
-    footer code {
-      background: #34495e;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: monospace;
-      font-size: 0.9em;
-    }
+        .copy-btn:active {
+            transform: translateY(0);
+        }
 
-    .success-toast {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #27ae60;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 1000;
-    }
+        .copy-success {
+            background: var(--success-color) !important;
+        }
 
-    .visible {
-      opacity: 1;
-    }
+        /* Usage guide section */
+        .usage-guide {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: var(--shadow-md);
+            margin-top: 3rem;
+        }
 
-    .error {
-      color: #e74c3c;
-      font-weight: bold;
-    }
+        .guide-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            text-align: center;
+        }
 
-    /* دعم ARIA وتحسينات الوصول */
-    [role="alert"] {
-      padding: 10px;
-      margin-top: 10px;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      display: none;
-    }
+        .guide-section {
+            margin-bottom: 2rem;
+        }
 
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-  </style>
+        .guide-section h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .guide-section p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .example-box {
+            background: var(--bg-color);
+            border-right: 4px solid var(--primary-color);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-family: monospace;
+            direction: ltr;
+            text-align: right;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--text-primary);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-right: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Error message */
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .calculator-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .calc-card {
+                padding: 1.5rem;
+            }
+
+            .usage-guide {
+                padding: 2rem 1.5rem;
+            }
+
+            .result-text {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .calculating {
+            animation: pulse 1s infinite;
+        }
+
+        /* Accessibility focus styles */
+        *:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
+    <a href="#main-content" class="skip-link">تخطي إلى المحتوى الرئيسي</a>
+    
     <header>
-      <h1>🧮 حاسبة النسب المئوية</h1>
-      <p class="subtitle">أداة ذكية لحساب النسب فورًا بدون تأخير</p>
+        <div class="container">
+            <div class="header-content">
+                <h1>آلة حاسبة النسب المئوية الاحترافية</h1>
+                <p class="subtitle">احسب النسب المئوية بسهولة ودقة - أدوات متعددة لجميع احتياجاتك</p>
+            </div>
+        </div>
     </header>
 
-    <div class="calculator-grid">
-      <!-- الحساب الأول: X% من Y -->
-      <div class="card">
-        <h2>حساب "X% من Y"</h2>
-        <p class="tooltip">ما هو ناتج X% من العدد Y؟</p>
+    <main id="main-content">
+        <div class="container">
+            <div class="calculator-grid">
+                <!-- Calculator 1: X% of Y -->
+                <section class="calc-card" aria-labelledby="calc1-title">
+                    <h2 id="calc1-title" class="calc-title">
+                        <i class="fas fa-percentage"></i>
+                        حساب "X% من Y"
+                    </h2>
+                    <form id="calc1-form" aria-label="حساب نسبة مئوية من رقم">
+                        <div class="input-group">
+                            <label for="percentage">
+                                النسبة المئوية (%)
+                                <span class="tooltip">
+                                    <i class="fas fa-question-circle" aria-hidden="true"></i>
+                                    <span class="tooltiptext">أدخل النسبة المئوية التي تريد حسابها</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="percentage" 
+                                step="any" 
+                                placeholder="مثال: 25"
+                                aria-describedby="percentage-error"
+                                required
+                            >
+                            <div id="percentage-error" class="error-message" role="alert"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="total">
+                                الرقم الكلي
+                                <span class="tooltip">
+                                    <i class="fas fa-question-circle" aria-hidden="true"></i>
+                                    <span class="tooltiptext">الرقم الذي تريد حساب النسبة المئوية منه</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="total" 
+                                step="any" 
+                                placeholder="مثال: 200"
+                                aria-describedby="total-error"
+                                required
+                            >
+                            <div id="total-error" class="error-message" role="alert"></div>
+                        </div>
+                    </form>
+                    <div class="result-container">
+                        <div class="result-text" id="result1" aria-live="polite">
+                            أدخل الأرقام للحصول على النتيجة
+                        </div>
+                        <button class="copy-btn" id="copy1" aria-label="نسخ النتيجة" disabled>
+                            <i class="fas fa-copy"></i>
+                            نسخ
+                        </button>
+                    </div>
+                </section>
 
-        <div class="input-group">
-          <label for="percent1">أدخل النسبة المئوية (X%)</label>
-          <input type="number" id="percent1" step="any" min="0" placeholder="مثلاً: 25" aria-label="النسبة المئوية" />
+                <!-- Calculator 2: X is what % of Y -->
+                <section class="calc-card" aria-labelledby="calc2-title">
+                    <h2 id="calc2-title" class="calc-title">
+                        <i class="fas fa-chart-pie"></i>
+                        حساب "X هو كم % من Y"
+                    </h2>
+                    <form id="calc2-form" aria-label="حساب نسبة رقم من رقم آخر">
+                        <div class="input-group">
+                            <label for="part">
+                                الرقم الجزئي
+                                <span class="tooltip">
+                                    <i class="fas fa-question-circle" aria-hidden="true"></i>
+                                    <span class="tooltiptext">الرقم الذي تريد معرفة نسبته المئوية</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="part" 
+                                step="any" 
+                                placeholder="مثال: 50"
+                                aria-describedby="part-error"
+                                required
+                            >
+                            <div id="part-error" class="error-message" role="alert"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="whole">
+                                الرقم الكلي
+                                <span class="tooltip">
+                                    <i class="fas fa-question-circle" aria-hidden="true"></i>
+                                    <span class="tooltiptext">الرقم الإجمالي أو المرجعي</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="whole" 
+                                step="any" 
+                                placeholder="مثال: 200"
+                                aria-describedby="whole-error"
+                                required
+                            >
+                            <div id="whole-error" class="error-message" role="alert"></div>
+                        </div>
+                    </form>
+                    <div class="result-container">
+                        <div class="result-text" id="result2" aria-live="polite">
+                            أدخل الأرقام للحصول على النتيجة
+                        </div>
+                        <button class="copy-btn" id="copy2" aria-label="نسخ النتيجة" disabled>
+                            <i class="fas fa-copy"></i>
+                            نسخ
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Calculator 3: Percentage change -->
+                <section class="calc-card" aria-labelledby="calc3-title">
+                    <h2 id="calc3-title" class="calc-title">
+                        <i class="fas fa-chart-line"></i>
+                        حساب نسبة التغيير
+                    </h2>
+                    <form id="calc3-form" aria-label="حساب نسبة الزيادة أو النقصان">
+                        <div class="input-group">
+                            <label for="original">
+                                الرقم الأصلي
+                                <span class="tooltip">
+                                    <i class="fas fa-question-circle" aria-hidden="true"></i>
+                                    <span class="tooltiptext">القيمة الأولية أو القديمة</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="original" 
+                                step="any" 
+                                placeholder="مثال: 100"
+                                aria-describedby="original-error"
+                                required
+                            >
+                            <div id="original-error" class="error-message" role="alert"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="new">
+                                الرقم الجديد
+                                <span class="tooltip">
+                                    <i class="fas fa-question-circle" aria-hidden="true"></i>
+                                    <span class="tooltiptext">القيمة النهائية أو الجديدة</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="number" 
+                                id="new" 
+                                step="any" 
+                                placeholder="مثال: 150"
+                                aria-describedby="new-error"
+                                required
+                            >
+                            <div id="new-error" class="error-message" role="alert"></div>
+                        </div>
+                    </form>
+                    <div class="result-container">
+                        <div class="result-text" id="result3" aria-live="polite">
+                            أدخل الأرقام للحصول على النتيجة
+                        </div>
+                        <button class="copy-btn" id="copy3" aria-label="نسخ النتيجة" disabled>
+                            <i class="fas fa-copy"></i>
+                            نسخ
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Usage Guide Section -->
+            <section class="usage-guide" aria-labelledby="guide-title">
+                <h2 id="guide-title" class="guide-title">دليل استخدام الأداة</h2>
+                
+                <div class="guide-section">
+                    <h3>1. حساب "X% من Y"</h3>
+                    <p>
+                        تستخدم هذه الأداة لحساب قيمة نسبة مئوية محددة من رقم معين. على سبيل المثال، إذا أردت معرفة كم يساوي 25% من 200، أدخل 25 في حقل النسبة المئوية و200 في حقل الرقم الكلي.
+                    </p>
+                    <div class="example-box">
+                        مثال: 25% من 200 = 50
+                    </div>
+                    <p>
+                        <strong>الصيغة المستخدمة:</strong> (النسبة المئوية / 100) × الرقم الكلي
+                    </p>
+                </div>
+
+                <div class="guide-section">
+                    <h3>2. حساب "X هو كم % من Y"</h3>
+                    <p>
+                        هذه الأداة تساعدك على معرفة النسبة المئوية التي يمثلها رقم من رقم آخر. مثلاً، إذا كان لديك 50 ريالاً من إجمالي 200 ريال، يمكنك معرفة أن 50 يمثل 25% من 200.
+                    </p>
+                    <div class="example-box">
+                        مثال: 50 هو كم % من 200 = 25%
+                    </div>
+                    <p>
+                        <strong>الصيغة المستخدمة:</strong> (الرقم الجزئي / الرقم الكلي) × 100
+                    </p>
+                </div>
+
+                <div class="guide-section">
+                    <h3>3. حساب نسبة التغيير (الزيادة أو النقصان)</h3>
+                    <p>
+                        تستخدم هذه الأداة لحساب نسبة التغيير بين رقمين، سواء كان تغيراً بالزيادة أو بالنقصان. مفيدة لحساب التغيرات في الأسعار، الأرباح، الخسائر، أو أي قيم أخرى.
+                    </p>
+                    <div class="example-box">
+                        مثال (زيادة): من 100 إلى 150 = زيادة 50%<br>
+                        مثال (نقصان): من 100 إلى 80 = نقصان 20%
+                    </div>
+                    <p>
+                        <strong>الصيغة المستخدمة:</strong> ((الرقم الجديد - الرقم الأصلي) / الرقم الأصلي) × 100
+                    </p>
+                    <p>
+                        إذا كانت النتيجة موجبة، فهذا يعني زيادة. وإذا كانت سالبة، فهذا يعني نقصان.
+                    </p>
+                </div>
+
+                <div class="guide-section">
+                    <h3>ميزات الأداة</h3>
+                    <ul style="list-style-type: none; padding-right: 0;">
+                        <li style="margin-bottom: 0.5rem;">✓ <strong>حساب فوري:</strong> النتائج تظهر فوراً أثناء الكتابة</li>
+                        <li style="margin-bottom: 0.5rem;">✓ <strong>دقة عالية:</strong> تدعم الأرقام العشرية والكبيرة</li>
+                        <li style="margin-bottom: 0.5rem;">✓ <strong>نسخ سهل:</strong> انقر على زر "نسخ" لنسخ النتيجة</li>
+                        <li style="margin-bottom: 0.5rem;">✓ <strong>تصميم متجاوب:</strong> تعمل بشكل مثالي على جميع الأجهزة</li>
+                        <li style="margin-bottom: 0.5rem;">✓ <strong>واجهة سهلة:</strong> تصميم بسيط وواضح للاستخدام</li>
+                        <li>✓ <strong>متوافق مع معايير الوصول:</strong> يمكن استخدامها من قبل الجميع</li>
+                    </ul>
+                </div>
+            </section>
         </div>
+    </main>
 
-        <div class="input-group">
-          <label for="number1">أدخل العدد الكلي (Y)</label>
-          <input type="number" id="number1" step="any" min="0" placeholder="مثلاً: 200" aria-label="العدد الكلي" />
-        </div>
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all input elements and result containers
+            const inputs = {
+                calc1: {
+                    percentage: document.getElementById('percentage'),
+                    total: document.getElementById('total'),
+                    result: document.getElementById('result1'),
+                    copyBtn: document.getElementById('copy1')
+                },
+                calc2: {
+                    part: document.getElementById('part'),
+                    whole: document.getElementById('whole'),
+                    result: document.getElementById('result2'),
+                    copyBtn: document.getElementById('copy2')
+                },
+                calc3: {
+                    original: document.getElementById('original'),
+                    new: document.getElementById('new'),
+                    result: document.getElementById('result3'),
+                    copyBtn: document.getElementById('copy3')
+                }
+            };
 
-        <div id="result1" class="result" aria-live="polite">النتيجة ستظهر هنا...</div>
-        <button class="copy-btn" onclick="copyResult('result1')">نسخ الناتج</button>
-        <div id="error1" class="error" role="alert"></div>
-      </div>
+            // Format number for Arabic display
+            function formatNumber(num) {
+                // Convert to string and handle very large/small numbers
+                if (Math.abs(num) < 0.0001 && num !== 0) {
+                    return num.toExponential(4);
+                }
+                if (Math.abs(num) > 999999999) {
+                    return num.toExponential(4);
+                }
+                
+                // Regular number formatting
+                return parseFloat(num.toFixed(10)).toString();
+            }
 
-      <!-- الحساب الثاني: X هو كم % من Y -->
-      <div class="card">
-        <h2>حساب "X هو كم % من Y"</h2>
-        <p class="tooltip">ما هي النسبة المئوية التي تمثل X من العدد Y؟</p>
+            // Calculator 1: X% of Y
+            function calculatePercentage() {
+                const percentage = parseFloat(inputs.calc1.percentage.value) || 0;
+                const total = parseFloat(inputs.calc1.total.value) || 0;
+                
+                if (percentage !== 0 && total !== 0) {
+                    const result = (percentage / 100) * total;
+                    const formattedResult = formatNumber(result);
+                    inputs.calc1.result.textContent = `${formattedResult}`;
+                    inputs.calc1.copyBtn.disabled = false;
+                    
+                    // Add visual feedback
+                    inputs.calc1.result.classList.add('calculating');
+                    setTimeout(() => {
+                        inputs.calc1.result.classList.remove('calculating');
+                    }, 300);
+                } else {
+                    inputs.calc1.result.textContent = 'أدخل الأرقام للحصول على النتيجة';
+                    inputs.calc1.copyBtn.disabled = true;
+                }
+            }
 
-        <div class="input-group">
-          <label for="part">أدخل الجزء (X)</label>
-          <input type="number" id="part" step="any" min="0" placeholder="مثلاً: 50" aria-label="العدد الجزئي" />
-        </div>
+            // Calculator 2: X is what % of Y
+            function calculateWhatPercentage() {
+                const part = parseFloat(inputs.calc2.part.value) || 0;
+                const whole = parseFloat(inputs.calc2.whole.value) || 0;
+                
+                if (part !== 0 && whole !== 0) {
+                    const result = (part / whole) * 100;
+                    const formattedResult = formatNumber(result);
+                    inputs.calc2.result.textContent = `${formattedResult}%`;
+                    inputs.calc2.copyBtn.disabled = false;
+                    
+                    // Add visual feedback
+                    inputs.calc2.result.classList.add('calculating');
+                    setTimeout(() => {
+                        inputs.calc2.result.classList.remove('calculating');
+                    }, 300);
+                } else {
+                    inputs.calc2.result.textContent = 'أدخل الأرقام للحصول على النتيجة';
+                    inputs.calc2.copyBtn.disabled = true;
+                }
+            }
 
-        <div class="input-group">
-          <label for="whole">أدخل الكل (Y)</label>
-          <input type="number" id="whole" step="any" min="0.000001" placeholder="مثلاً: 200" aria-label="العدد الكلي" />
-        </div>
+            // Calculator 3: Percentage change
+            function calculatePercentageChange() {
+                const original = parseFloat(inputs.calc3.original.value) || 0;
+                const newValue = parseFloat(inputs.calc3.new.value) || 0;
+                
+                if (original !== 0 && newValue !== 0) {
+                    const change = newValue - original;
+                    const percentageChange = (change / original) * 100;
+                    const formattedChange = formatNumber(Math.abs(percentageChange));
+                    
+                    let resultText = '';
+                    if (percentageChange > 0) {
+                        resultText = `زيادة ${formattedChange}%`;
+                    } else if (percentageChange < 0) {
+                        resultText = `نقصان ${formattedChange}%`;
+                    } else {
+                        resultText = 'لا يوجد تغيير (0%)';
+                    }
+                    
+                    inputs.calc3.result.textContent = resultText;
+                    inputs.calc3.copyBtn.disabled = false;
+                    
+                    // Add visual feedback
+                    inputs.calc3.result.classList.add('calculating');
+                    setTimeout(() => {
+                        inputs.calc3.result.classList.remove('calculating');
+                    }, 300);
+                } else {
+                    inputs.calc3.result.textContent = 'أدخل الأرقام للحصول على النتيجة';
+                    inputs.calc3.copyBtn.disabled = true;
+                }
+            }
 
-        <div id="result2" class="result" aria-live="polite">النتيجة ستظهر هنا...</div>
-        <button class="copy-btn" onclick="copyResult('result2')">نسخ الناتج</button>
-        <div id="error2" class="error" role="alert"></div>
-      </div>
+            // Add event listeners for real-time calculation
+            inputs.calc1.percentage.addEventListener('input', calculatePercentage);
+            inputs.calc1.total.addEventListener('input', calculatePercentage);
+            
+            inputs.calc2.part.addEventListener('input', calculateWhatPercentage);
+            inputs.calc2.whole.addEventListener('input', calculateWhatPercentage);
+            
+            inputs.calc3.original.addEventListener('input', calculatePercentageChange);
+            inputs.calc3.new.addEventListener('input', calculatePercentageChange);
 
-      <!-- الحساب الثالث: نسبة التغير بين رقمين -->
-      <div class="card">
-        <h2>حساب الزيادة أو النقصان النسبي</h2>
-        <p class="tooltip">ما هي نسبة التغير من العدد الأول إلى الثاني؟</p>
+            // Copy to clipboard functionality
+            function setupCopyButton(button, resultElement) {
+                button.addEventListener('click', async function() {
+                    try {
+                        await navigator.clipboard.writeText(resultElement.textContent);
+                        
+                        // Visual feedback
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                        button.classList.add('copy-success');
+                        
+                        // Reset after 2 seconds
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                            button.classList.remove('copy-success');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                        // Fallback for older browsers
+                        const textArea = document.createElement('textarea');
+                        textArea.value = resultElement.textContent;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        
+                        // Show feedback
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                        button.classList.add('copy-success');
+                        
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                            button.classList.remove('copy-success');
+                        }, 2000);
+                    }
+                });
+            }
 
-        <div class="input-group">
-          <label for="oldValue">القيمة القديمة (الأولى)</label>
-          <input type="number" id="oldValue" step="any" placeholder="مثلاً: 150" aria-label="القيمة الأصلية" />
-        </div>
+            // Setup copy buttons
+            setupCopyButton(inputs.calc1.copyBtn, inputs.calc1.result);
+            setupCopyButton(inputs.calc2.copyBtn, inputs.calc2.result);
+            setupCopyButton(inputs.calc3.copyBtn, inputs.calc3.result);
 
-        <div class="input-group">
-          <label for="newValue">القيمة الجديدة (الثانية)</label>
-          <input type="number" id="newValue" step="any" placeholder="مثلاً: 180" aria-label="القيمة الجديدة" />
-        </div>
+            // Input validation
+            function validateInput(input, errorElement) {
+                input.addEventListener('invalid', function(e) {
+                    e.preventDefault();
+                    if (input.validity.valueMissing) {
+                        errorElement.textContent = 'هذا الحقل مطلوب';
+                    } else if (input.validity.typeMismatch) {
+                        errorElement.textContent = 'يرجى إدخال رقم صحيح';
+                    }
+                    errorElement.style.display = 'block';
+                });
 
-        <div id="result3" class="result" aria-live="polite">النتيجة ستظهر هنا...</div>
-        <button class="copy-btn" onclick="copyResult('result3')">نسخ الناتج</button>
-        <div id="error3" class="error" role="alert"></div>
-      </div>
-    </div>
+                input.addEventListener('input', function() {
+                    if (input.validity.valid) {
+                        errorElement.style.display = 'none';
+                    }
+                });
+            }
 
-    <!-- دليل الاستخدام -->
-    <footer>
-      <h3>📚 دليل الاستخدام</h3>
-      <p>هذه الأداة تساعدك في حساب النسب المئوية بسهولة ودقة فائقة. إليك كيفية استخدام كل قسم:</p>
-      <br />
-      <ul>
-        <li>
-          <strong>حساب "X% من Y"</strong>: استخدم هذا القسم عندما تريد معرفة كم يساوي مبلغ معين بنسبة مئوية من عدد.  
-          <br /><strong>مثال:</strong> ما هو 20% من 500؟ → الإجابة: 100.
-        </li>
-        <br />
-        <li>
-          <strong>حساب "X هو كم % من Y"</strong>: استخدمه لمعرفة النسبة المئوية التي يمثلها عدد معين بالنسبة لعدد أكبر.  
-          <br /><strong>مثال:</strong> 75 هو كم % من 300؟ → الإجابة: 25%.
-        </li>
-        <br />
-        <li>
-          <strong>حساب الزيادة أو النقصان</strong>: يُستخدم لمعرفة نسبة التغير بين رقمين (مثل سعر قبل وبعد الخصم).  
-          <br /><strong>مثال:</strong> من 80 إلى 100 → زيادة بنسبة 25%.  
-          <br />ومن 100 إلى 80 → نقصان بنسبة 20%.
-        </li>
-      </ul>
-      <br />
-      <p><strong>ملاحظات:</strong></p>
-      <ul>
-        <li>تظهر النتائج <strong>فورًا أثناء الكتابة</strong> بدون الحاجة للنقر.</li>
-        <li>تدعم الأعداد العشرية (<code>3.14</code>) والأعداد الكبيرة.</li>
-        <li>يمكنك نسخ أي نتيجة بنقرة واحدة على زر "نسخ الناتج".</li>
-        <li>الأداة تعمل على جميع الهواتف والأجهزة.</li>
-      </ul>
-    </footer>
-  </div>
+            // Setup validation for all inputs
+            const errorElements = {
+                percentage: document.getElementById('percentage-error'),
+                total: document.getElementById('total-error'),
+                part: document.getElementById('part-error'),
+                whole: document.getElementById('whole-error'),
+                original: document.getElementById('original-error'),
+                new: document.getElementById('new-error')
+            };
 
-  <!-- نافذة إشعار النسخ -->
-  <div id="toast" class="success-toast" role="alert">تم النسخ إلى الحافظة!</div>
+            validateInput(inputs.calc1.percentage, errorElements.percentage);
+            validateInput(inputs.calc1.total, errorElements.total);
+            validateInput(inputs.calc2.part, errorElements.part);
+            validateInput(inputs.calc2.whole, errorElements.whole);
+            validateInput(inputs.calc3.original, errorElements.original);
+            validateInput(inputs.calc3.new, errorElements.new);
 
-  <script>
-    // دالة لنسخ النص من عنصر إلى الحافظة
-    function copyResult(elementId) {
-      const resultElement = document.getElementById(elementId);
-      const text = resultElement.innerText;
+            // Prevent form submission on Enter key
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                });
+            });
 
-      if (!text || text.includes("النتيجة ستظهر هنا")) {
-        showToast("لا يوجد ناتج لنسخه بعد.");
-        return;
-      }
+            // Add keyboard navigation support
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + C to copy results when focused
+                if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+                    const activeElement = document.activeElement;
+                    if (activeElement.tagName === 'INPUT') {
+                        // Let default copy behavior handle input copying
+                        return;
+                    }
+                    
+                    // Find the nearest result and copy button
+                    const calcCards = document.querySelectorAll('.calc-card');
+                    calcCards.forEach(card => {
+                        const rect = card.getBoundingClientRect();
+                        if (activeElement.getBoundingClientRect().top >= rect.top &&
+                            activeElement.getBoundingClientRect().bottom <= rect.bottom) {
+                            const copyBtn = card.querySelector('.copy-btn');
+                            if (copyBtn && !copyBtn.disabled) {
+                                copyBtn.click();
+                            }
+                        }
+                    });
+                }
+            });
 
-      navigator.clipboard.writeText(text).then(() => {
-        showToast("تم النسخ إلى الحافظة!");
-      }).catch(err => {
-        console.error('فشل نسخ النص: ', err);
-        showToast("فشل النسخ. حاول مرة أخرى.");
-      });
-    }
-
-    // عرض رسالة مؤقتة (Toast)
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.classList.add("visible");
-
-      setTimeout(() => {
-        toast.classList.remove("visible");
-      }, 2000);
-    }
-
-    // تنسيق الأرقام بـ 4 أرقام عشرية كحد أقصى، وإزالة الأصفار الزائدة
-    function formatNumber(num) {
-      if (isNaN(num) || !isFinite(num)) return "غير معرف";
-      return parseFloat(num.toFixed(6)).toString();
-    }
-
-    // دالة عامة لحساب النسبة المئوية
-    function calculatePercentage(percent, total) {
-      return (percent / 100) * total;
-    }
-
-    // دالة لحساب النسبة المئوية لجزء من الكل
-    function calculatePercentOf(part, whole) {
-      if (whole === 0) return NaN;
-      return (part / whole) * 100;
-    }
-
-    // دالة لحساب نسبة التغير بين قيمتين
-    function calculateChangePercent(oldVal, newVal) {
-      if (oldVal === 0) return newVal > 0 ? Infinity : newVal < 0 ? -Infinity : 0;
-      return ((newVal - oldVal) / Math.abs(oldVal)) * 100;
-    }
-
-    // دالة للتحقق من صحة الإدخال
-    function validateInput(value, fieldName, errorElement) {
-      if (value === '' || value === null || isNaN(value)) {
-        showError(errorElement, `الرجاء إدخال ${fieldName} صحيح.`);
-        return false;
-      }
-      if (value < 0 && fieldName !== "القيمة القديمة" && fieldName !== "القيمة الجديدة") {
-        showError(errorElement, `${fieldName} يجب أن يكون عددًا موجبًا.`);
-        return false;
-      }
-      clearError(errorElement);
-      return true;
-    }
-
-    function showError(elementId, message) {
-      const el = document.getElementById(elementId);
-      el.innerText = message;
-      el.style.display = "block";
-    }
-
-    function clearError(elementId) {
-      const el = document.getElementById(elementId);
-      el.style.display = "none";
-      el.innerText = "";
-    }
-
-    // تحديث النتائج فورًا
-    document.getElementById("percent1").addEventListener("input", function () {
-      const percent = parseFloat(this.value);
-      const total = parseFloat(document.getElementById("number1").value);
-
-      if (validateInput(percent, "النسبة المئوية", "error1") && validateInput(total, "العدد الكلي", "error1")) {
-        const result = calculatePercentage(percent, total);
-        document.getElementById("result1").innerHTML = `<strong>${formatNumber(result)}</strong> هو ${formatNumber(percent)}% من ${formatNumber(total)}`;
-      } else {
-        document.getElementById("result1").textContent = "النتيجة ستظهر هنا...";
-      }
-    });
-
-    document.getElementById("number1").addEventListener("input", function () {
-      const total = parseFloat(this.value);
-      const percent = parseFloat(document.getElementById("percent1").value);
-
-      if (validateInput(percent, "النسبة المئوية", "error1") && validateInput(total, "العدد الكلي", "error1")) {
-        const result = calculatePercentage(percent, total);
-        document.getElementById("result1").innerHTML = `<strong>${formatNumber(result)}</strong> هو ${formatNumber(percent)}% من ${formatNumber(total)}`;
-      } else {
-        document.getElementById("result1").textContent = "النتيجة ستظهر هنا...";
-      }
-    });
-
-    // حساب الجزء من الكل
-    document.getElementById("part").addEventListener("input", function () {
-      const part = parseFloat(this.value);
-      const whole = parseFloat(document.getElementById("whole").value);
-
-      if (validateInput(part, "الجزء", "error2") && validateInput(whole, "الكل", "error2")) {
-        const percent = calculatePercentOf(part, whole);
-        if (!isFinite(percent)) {
-          document.getElementById("result2").innerHTML = `<strong>غير معرف</strong> (القسمة على صفر)`;
-        } else {
-          document.getElementById("result2").innerHTML = `<strong>${formatNumber(part)}</strong> هو <strong>${formatNumber(percent)}%</strong> من <strong>${formatNumber(whole)}</strong>`;
-        }
-      } else {
-        document.getElementById("result2").textContent = "النتيجة ستظهر هنا...";
-      }
-    });
-
-    document.getElementById("whole").addEventListener("input", function () {
-      const whole = parseFloat(this.value);
-      const part = parseFloat(document.getElementById("part").value);
-
-      if (validateInput(part, "الجزء", "error2") && validateInput(whole, "الكل", "error2")) {
-        const percent = calculatePercentOf(part, whole);
-        if (!isFinite(percent)) {
-          document.getElementById("result2").innerHTML = `<strong>غير معرف</strong> (القسمة على صفر)`;
-        } else {
-          document.getElementById("result2").innerHTML = `<strong>${formatNumber(part)}</strong> هو <strong>${formatNumber(percent)}%</strong> من <strong>${formatNumber(whole)}</strong>`;
-        }
-      } else {
-        document.getElementById("result2").textContent = "النتيجة ستظهر هنا...";
-      }
-    });
-
-    // حساب التغير النسبي
-    document.getElementById("oldValue").addEventListener("input", function () {
-      const oldVal = parseFloat(this.value);
-      const newVal = parseFloat(document.getElementById("newValue").value);
-
-      if (isNaN(oldVal) || isNaN(newVal)) {
-        document.getElementById("result3").textContent = "النتيجة ستظهر هنا...";
-        return;
-      }
-
-      const changePercent = calculateChangePercent(oldVal, newVal);
-      let resultText = "";
-
-      if (!isFinite(changePercent)) {
-        resultText = "التغير غير معرف (القيمة القديمة صفر)";
-      } else {
-        const formattedPercent = formatNumber(Math.abs(changePercent));
-        if (newVal > oldVal) {
-          resultText = `زيادة بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
-        } else if (newVal < oldVal) {
-          resultText = `نقصان بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
-        } else {
-          resultText = `لا يوجد تغير (القيمتان متساويتان: ${formatNumber(oldVal)})`;
-        }
-      }
-
-      document.getElementById("result3").innerHTML = resultText;
-    });
-
-    document.getElementById("newValue").addEventListener("input", function () {
-      const newVal = parseFloat(this.value);
-      const oldVal = parseFloat(document.getElementById("oldValue").value);
-
-      if (isNaN(oldVal) || isNaN(newVal)) {
-        document.getElementById("result3").textContent = "النتيجة ستظهر هنا...";
-        return;
-      }
-
-      const changePercent = calculateChangePercent(oldVal, newVal);
-      let resultText = "";
-
-      if (!isFinite(changePercent)) {
-        resultText = "التغير غير معرف (القيمة القديمة صفر)";
-      } else {
-        const formattedPercent = formatNumber(Math.abs(changePercent));
-        if (newVal > oldVal) {
-          resultText = `زيادة بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
-        } else if (newVal < oldVal) {
-          resultText = `نقصان بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
-        } else {
-          resultText = `لا يوجد تغير (القيمتان متساويتان: ${formatNumber(oldVal)})`;
-        }
-      }
-
-      document.getElementById("result3").innerHTML = resultText;
-    });
-
-    // تحميل أولي للنتائج (لتفادي رسالة "النتيجة ستظهر هنا" عند التحميل)
-    window.addEventListener("load", () => {
-      document.getElementById("result1").textContent = "أدخل القيم لرؤية النتيجة...";
-      document.getElementById("result2").textContent = "أدخل القيم لرؤية النتيجة...";
-      document.getElementById("result3").textContent = "أدخل القيم لرؤية النتيجة...";
-    });
-  </script>
+            // Initialize calculations on load
+            calculatePercentage();
+            calculateWhatPercentage();
+            calculatePercentageChange();
+        });
+    </script>
 </body>
 </html>
