@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="أداة حساب النسب المئوية بالعربية - تحسب النسب، النسب المئوية من عدد، والزيادة أو النقصان بين عددين فورًا." />
+  <title>حاسبة النسب المئوية | أداة عربية ذكية</title>
+  <style>
+    /* Reset عام مع دعم RTL */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f9fc;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #7f8c8d;
+    }
+
+    .calculator-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    @media (min-width: 768px) {
+      .calculator-grid {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+    }
+
+    .card {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      padding: 20px;
+      flex: 1 1 300px;
+      min-width: 280px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      text-align: right;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 8px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: right;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background: #e8f4fc;
+      border: 1px solid #b3d9ff;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      color: #2980b9;
+      text-align: right;
+      word-wrap: break-word;
+    }
+
+    .copy-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      background: #2980b9;
+    }
+
+    .tooltip {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding: 25px;
+      background: #2c3e50;
+      color: #ecf0f1;
+      border-radius: 10px;
+      text-align: right;
+    }
+
+    footer h3 {
+      font-size: 1.4rem;
+      margin-bottom: 15px;
+      color: #3498db;
+    }
+
+    footer ul {
+      list-style-type: none;
+    }
+
+    footer ul li {
+      margin-bottom: 10px;
+    }
+
+    footer code {
+      background: #34495e;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+
+    .success-toast {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #27ae60;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    .visible {
+      opacity: 1;
+    }
+
+    .error {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+
+    /* دعم ARIA وتحسينات الوصول */
+    [role="alert"] {
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      display: none;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🧮 حاسبة النسب المئوية</h1>
+      <p class="subtitle">أداة ذكية لحساب النسب فورًا بدون تأخير</p>
+    </header>
+
+    <div class="calculator-grid">
+      <!-- الحساب الأول: X% من Y -->
+      <div class="card">
+        <h2>حساب "X% من Y"</h2>
+        <p class="tooltip">ما هو ناتج X% من العدد Y؟</p>
+
+        <div class="input-group">
+          <label for="percent1">أدخل النسبة المئوية (X%)</label>
+          <input type="number" id="percent1" step="any" min="0" placeholder="مثلاً: 25" aria-label="النسبة المئوية" />
+        </div>
+
+        <div class="input-group">
+          <label for="number1">أدخل العدد الكلي (Y)</label>
+          <input type="number" id="number1" step="any" min="0" placeholder="مثلاً: 200" aria-label="العدد الكلي" />
+        </div>
+
+        <div id="result1" class="result" aria-live="polite">النتيجة ستظهر هنا...</div>
+        <button class="copy-btn" onclick="copyResult('result1')">نسخ الناتج</button>
+        <div id="error1" class="error" role="alert"></div>
+      </div>
+
+      <!-- الحساب الثاني: X هو كم % من Y -->
+      <div class="card">
+        <h2>حساب "X هو كم % من Y"</h2>
+        <p class="tooltip">ما هي النسبة المئوية التي تمثل X من العدد Y؟</p>
+
+        <div class="input-group">
+          <label for="part">أدخل الجزء (X)</label>
+          <input type="number" id="part" step="any" min="0" placeholder="مثلاً: 50" aria-label="العدد الجزئي" />
+        </div>
+
+        <div class="input-group">
+          <label for="whole">أدخل الكل (Y)</label>
+          <input type="number" id="whole" step="any" min="0.000001" placeholder="مثلاً: 200" aria-label="العدد الكلي" />
+        </div>
+
+        <div id="result2" class="result" aria-live="polite">النتيجة ستظهر هنا...</div>
+        <button class="copy-btn" onclick="copyResult('result2')">نسخ الناتج</button>
+        <div id="error2" class="error" role="alert"></div>
+      </div>
+
+      <!-- الحساب الثالث: نسبة التغير بين رقمين -->
+      <div class="card">
+        <h2>حساب الزيادة أو النقصان النسبي</h2>
+        <p class="tooltip">ما هي نسبة التغير من العدد الأول إلى الثاني؟</p>
+
+        <div class="input-group">
+          <label for="oldValue">القيمة القديمة (الأولى)</label>
+          <input type="number" id="oldValue" step="any" placeholder="مثلاً: 150" aria-label="القيمة الأصلية" />
+        </div>
+
+        <div class="input-group">
+          <label for="newValue">القيمة الجديدة (الثانية)</label>
+          <input type="number" id="newValue" step="any" placeholder="مثلاً: 180" aria-label="القيمة الجديدة" />
+        </div>
+
+        <div id="result3" class="result" aria-live="polite">النتيجة ستظهر هنا...</div>
+        <button class="copy-btn" onclick="copyResult('result3')">نسخ الناتج</button>
+        <div id="error3" class="error" role="alert"></div>
+      </div>
+    </div>
+
+    <!-- دليل الاستخدام -->
+    <footer>
+      <h3>📚 دليل الاستخدام</h3>
+      <p>هذه الأداة تساعدك في حساب النسب المئوية بسهولة ودقة فائقة. إليك كيفية استخدام كل قسم:</p>
+      <br />
+      <ul>
+        <li>
+          <strong>حساب "X% من Y"</strong>: استخدم هذا القسم عندما تريد معرفة كم يساوي مبلغ معين بنسبة مئوية من عدد.  
+          <br /><strong>مثال:</strong> ما هو 20% من 500؟ → الإجابة: 100.
+        </li>
+        <br />
+        <li>
+          <strong>حساب "X هو كم % من Y"</strong>: استخدمه لمعرفة النسبة المئوية التي يمثلها عدد معين بالنسبة لعدد أكبر.  
+          <br /><strong>مثال:</strong> 75 هو كم % من 300؟ → الإجابة: 25%.
+        </li>
+        <br />
+        <li>
+          <strong>حساب الزيادة أو النقصان</strong>: يُستخدم لمعرفة نسبة التغير بين رقمين (مثل سعر قبل وبعد الخصم).  
+          <br /><strong>مثال:</strong> من 80 إلى 100 → زيادة بنسبة 25%.  
+          <br />ومن 100 إلى 80 → نقصان بنسبة 20%.
+        </li>
+      </ul>
+      <br />
+      <p><strong>ملاحظات:</strong></p>
+      <ul>
+        <li>تظهر النتائج <strong>فورًا أثناء الكتابة</strong> بدون الحاجة للنقر.</li>
+        <li>تدعم الأعداد العشرية (<code>3.14</code>) والأعداد الكبيرة.</li>
+        <li>يمكنك نسخ أي نتيجة بنقرة واحدة على زر "نسخ الناتج".</li>
+        <li>الأداة تعمل على جميع الهواتف والأجهزة.</li>
+      </ul>
+    </footer>
+  </div>
+
+  <!-- نافذة إشعار النسخ -->
+  <div id="toast" class="success-toast" role="alert">تم النسخ إلى الحافظة!</div>
+
+  <script>
+    // دالة لنسخ النص من عنصر إلى الحافظة
+    function copyResult(elementId) {
+      const resultElement = document.getElementById(elementId);
+      const text = resultElement.innerText;
+
+      if (!text || text.includes("النتيجة ستظهر هنا")) {
+        showToast("لا يوجد ناتج لنسخه بعد.");
+        return;
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("تم النسخ إلى الحافظة!");
+      }).catch(err => {
+        console.error('فشل نسخ النص: ', err);
+        showToast("فشل النسخ. حاول مرة أخرى.");
+      });
+    }
+
+    // عرض رسالة مؤقتة (Toast)
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+
+      setTimeout(() => {
+        toast.classList.remove("visible");
+      }, 2000);
+    }
+
+    // تنسيق الأرقام بـ 4 أرقام عشرية كحد أقصى، وإزالة الأصفار الزائدة
+    function formatNumber(num) {
+      if (isNaN(num) || !isFinite(num)) return "غير معرف";
+      return parseFloat(num.toFixed(6)).toString();
+    }
+
+    // دالة عامة لحساب النسبة المئوية
+    function calculatePercentage(percent, total) {
+      return (percent / 100) * total;
+    }
+
+    // دالة لحساب النسبة المئوية لجزء من الكل
+    function calculatePercentOf(part, whole) {
+      if (whole === 0) return NaN;
+      return (part / whole) * 100;
+    }
+
+    // دالة لحساب نسبة التغير بين قيمتين
+    function calculateChangePercent(oldVal, newVal) {
+      if (oldVal === 0) return newVal > 0 ? Infinity : newVal < 0 ? -Infinity : 0;
+      return ((newVal - oldVal) / Math.abs(oldVal)) * 100;
+    }
+
+    // دالة للتحقق من صحة الإدخال
+    function validateInput(value, fieldName, errorElement) {
+      if (value === '' || value === null || isNaN(value)) {
+        showError(errorElement, `الرجاء إدخال ${fieldName} صحيح.`);
+        return false;
+      }
+      if (value < 0 && fieldName !== "القيمة القديمة" && fieldName !== "القيمة الجديدة") {
+        showError(errorElement, `${fieldName} يجب أن يكون عددًا موجبًا.`);
+        return false;
+      }
+      clearError(errorElement);
+      return true;
+    }
+
+    function showError(elementId, message) {
+      const el = document.getElementById(elementId);
+      el.innerText = message;
+      el.style.display = "block";
+    }
+
+    function clearError(elementId) {
+      const el = document.getElementById(elementId);
+      el.style.display = "none";
+      el.innerText = "";
+    }
+
+    // تحديث النتائج فورًا
+    document.getElementById("percent1").addEventListener("input", function () {
+      const percent = parseFloat(this.value);
+      const total = parseFloat(document.getElementById("number1").value);
+
+      if (validateInput(percent, "النسبة المئوية", "error1") && validateInput(total, "العدد الكلي", "error1")) {
+        const result = calculatePercentage(percent, total);
+        document.getElementById("result1").innerHTML = `<strong>${formatNumber(result)}</strong> هو ${formatNumber(percent)}% من ${formatNumber(total)}`;
+      } else {
+        document.getElementById("result1").textContent = "النتيجة ستظهر هنا...";
+      }
+    });
+
+    document.getElementById("number1").addEventListener("input", function () {
+      const total = parseFloat(this.value);
+      const percent = parseFloat(document.getElementById("percent1").value);
+
+      if (validateInput(percent, "النسبة المئوية", "error1") && validateInput(total, "العدد الكلي", "error1")) {
+        const result = calculatePercentage(percent, total);
+        document.getElementById("result1").innerHTML = `<strong>${formatNumber(result)}</strong> هو ${formatNumber(percent)}% من ${formatNumber(total)}`;
+      } else {
+        document.getElementById("result1").textContent = "النتيجة ستظهر هنا...";
+      }
+    });
+
+    // حساب الجزء من الكل
+    document.getElementById("part").addEventListener("input", function () {
+      const part = parseFloat(this.value);
+      const whole = parseFloat(document.getElementById("whole").value);
+
+      if (validateInput(part, "الجزء", "error2") && validateInput(whole, "الكل", "error2")) {
+        const percent = calculatePercentOf(part, whole);
+        if (!isFinite(percent)) {
+          document.getElementById("result2").innerHTML = `<strong>غير معرف</strong> (القسمة على صفر)`;
+        } else {
+          document.getElementById("result2").innerHTML = `<strong>${formatNumber(part)}</strong> هو <strong>${formatNumber(percent)}%</strong> من <strong>${formatNumber(whole)}</strong>`;
+        }
+      } else {
+        document.getElementById("result2").textContent = "النتيجة ستظهر هنا...";
+      }
+    });
+
+    document.getElementById("whole").addEventListener("input", function () {
+      const whole = parseFloat(this.value);
+      const part = parseFloat(document.getElementById("part").value);
+
+      if (validateInput(part, "الجزء", "error2") && validateInput(whole, "الكل", "error2")) {
+        const percent = calculatePercentOf(part, whole);
+        if (!isFinite(percent)) {
+          document.getElementById("result2").innerHTML = `<strong>غير معرف</strong> (القسمة على صفر)`;
+        } else {
+          document.getElementById("result2").innerHTML = `<strong>${formatNumber(part)}</strong> هو <strong>${formatNumber(percent)}%</strong> من <strong>${formatNumber(whole)}</strong>`;
+        }
+      } else {
+        document.getElementById("result2").textContent = "النتيجة ستظهر هنا...";
+      }
+    });
+
+    // حساب التغير النسبي
+    document.getElementById("oldValue").addEventListener("input", function () {
+      const oldVal = parseFloat(this.value);
+      const newVal = parseFloat(document.getElementById("newValue").value);
+
+      if (isNaN(oldVal) || isNaN(newVal)) {
+        document.getElementById("result3").textContent = "النتيجة ستظهر هنا...";
+        return;
+      }
+
+      const changePercent = calculateChangePercent(oldVal, newVal);
+      let resultText = "";
+
+      if (!isFinite(changePercent)) {
+        resultText = "التغير غير معرف (القيمة القديمة صفر)";
+      } else {
+        const formattedPercent = formatNumber(Math.abs(changePercent));
+        if (newVal > oldVal) {
+          resultText = `زيادة بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
+        } else if (newVal < oldVal) {
+          resultText = `نقصان بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
+        } else {
+          resultText = `لا يوجد تغير (القيمتان متساويتان: ${formatNumber(oldVal)})`;
+        }
+      }
+
+      document.getElementById("result3").innerHTML = resultText;
+    });
+
+    document.getElementById("newValue").addEventListener("input", function () {
+      const newVal = parseFloat(this.value);
+      const oldVal = parseFloat(document.getElementById("oldValue").value);
+
+      if (isNaN(oldVal) || isNaN(newVal)) {
+        document.getElementById("result3").textContent = "النتيجة ستظهر هنا...";
+        return;
+      }
+
+      const changePercent = calculateChangePercent(oldVal, newVal);
+      let resultText = "";
+
+      if (!isFinite(changePercent)) {
+        resultText = "التغير غير معرف (القيمة القديمة صفر)";
+      } else {
+        const formattedPercent = formatNumber(Math.abs(changePercent));
+        if (newVal > oldVal) {
+          resultText = `زيادة بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
+        } else if (newVal < oldVal) {
+          resultText = `نقصان بنسبة <strong>${formattedPercent}%</strong> (من ${formatNumber(oldVal)} إلى ${formatNumber(newVal)})`;
+        } else {
+          resultText = `لا يوجد تغير (القيمتان متساويتان: ${formatNumber(oldVal)})`;
+        }
+      }
+
+      document.getElementById("result3").innerHTML = resultText;
+    });
+
+    // تحميل أولي للنتائج (لتفادي رسالة "النتيجة ستظهر هنا" عند التحميل)
+    window.addEventListener("load", () => {
+      document.getElementById("result1").textContent = "أدخل القيم لرؤية النتيجة...";
+      document.getElementById("result2").textContent = "أدخل القيم لرؤية النتيجة...";
+      document.getElementById("result3").textContent = "أدخل القيم لرؤية النتيجة...";
+    });
+  </script>
+</body>
+</html>
